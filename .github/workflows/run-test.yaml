@@ -2,30 +2,36 @@ name: Run Python Tests for TAU3
 
 on:
   push:
-    paths:
-      - 'TAU3/**'
+    branches:
+      - main
   pull_request:
-    paths:
-      - 'TAU3/**'
+    branches:
+      - main
 
 jobs:
   test:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      # Set up Python 3.x
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v2
         with:
-          python-version: '3.10'
-
+          python-version: '3.x'
+          
+      # Install dependencies from the requirements.txt file in TAU3
       - name: Install dependencies
         run: |
+          cd TAU3
           python -m pip install --upgrade pip
-          pip install -r TAU3/requirements.txt
+          pip install -r requirements.txt
 
+      # Run the tests in the TAU3 folder
       - name: Run tests
         run: |
-          pytest TAU3
+          cd TAU3
+          python -m unittest discover
